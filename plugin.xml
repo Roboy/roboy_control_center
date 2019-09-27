@@ -1,0 +1,14 @@
+<library path="lib/libroboy_control_center">
+  <class name="RoboyControlCenter" type="RoboyControlCenter" base_class_type="rqt_gui_cpp::Plugin">
+    <description>
+      Control Center
+    </description>
+    <qtgui>
+      <group>
+        <label>Roboy</label>
+      </group>
+      <label>Control Center</label>
+      <statustip>Great user interface to provide real value.</statustip>
+    </qtgui>
+  </class>
+</library>

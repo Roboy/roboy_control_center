@@ -50,7 +50,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QTabWidget" name="tabWidget">
+  <widget class="QTabWidget" name="tabs">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -60,7 +60,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -118,6 +118,34 @@
      </widget>
     </widget>
    </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>body part control</string>
+    </attribute>
+    <widget class="QScrollArea" name="body_part_control">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1061</width>
+       <height>1081</height>
+      </rect>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1059</width>
+        <height>1079</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
   </widget>
   <widget class="QScrollArea" name="notifications">
    <property name="geometry">
@@ -144,7 +172,7 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>tabs</tabstop>
   <tabstop>notifications</tabstop>
   <tabstop>stop_button_all</tabstop>
   <tabstop>icebus</tabstop>

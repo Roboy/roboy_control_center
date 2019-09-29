@@ -19,6 +19,7 @@
 #include <roboy_control_center/ui_roboy_control_center.h>
 #include <roboy_control_center/ui_icebus.h>
 #include <roboy_control_center/ui_motor.h>
+#include <roboy_control_center/ui_body_part.h>
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorConfigService.h>
@@ -52,6 +53,7 @@ private:
     Ui::RoboyControlCenter ui;
     map<int, Ui::Icebus> icebus_ui;
     map<int, Ui::motor> motor_ui;
+    map<string, Ui::body_part> body_part_ui;
     QColor color_pallette[16] = {Qt::blue, Qt::red, Qt::green, Qt::cyan, Qt::magenta, Qt::darkGray, Qt::darkRed, Qt::darkGreen,
                                  Qt::darkBlue, Qt::darkCyan, Qt::darkMagenta, Qt::darkYellow, Qt::black, Qt::gray, Qt::green, Qt::cyan};
     QWidget *widget_;

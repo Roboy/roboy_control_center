@@ -41,6 +41,9 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
     QScrollArea* scrollArea2 = widget_->findChild<QScrollArea *>("motor");
     scrollArea2->setWidgetResizable(true);
 
+    QScrollArea* scrollArea3 = widget_->findChild<QScrollArea *>("body_part_control");
+    scrollArea3->setWidgetResizable(true);
+
     QWidget *icebus_scrollarea = new QWidget(widget_);
     icebus_scrollarea->setObjectName("icebus_scrollarea");
     icebus_scrollarea->setLayout(new QVBoxLayout(icebus_scrollarea));
@@ -50,6 +53,11 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
     motor_scrollarea->setObjectName("motor_scrollarea");
     motor_scrollarea->setLayout(new QVBoxLayout(motor_scrollarea));
     scrollArea2->setWidget(motor_scrollarea);
+
+    QWidget *body_part_scrollarea = new QWidget(widget_);
+    body_part_scrollarea->setObjectName("bodypart_scrollarea");
+    body_part_scrollarea->setLayout(new QVBoxLayout(motor_scrollarea));
+    scrollArea3->setWidget(body_part_scrollarea);
 
     for(int i=0;i<number_of_icebuses;i++){
         QWidget *widget = new QWidget(icebus_scrollarea);
@@ -84,30 +92,16 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
         icebus_scrollarea->layout()->addWidget(widget);
     }
 
-    for(int i=0;i<total_number_of_motors;i++){
-
+    for(int i=0;i<body_part.size();i++){
+        QWidget *widget = new QWidget(body_part_scrollarea);
+        body_part_ui[body_part[i]->name].setupUi(widget);
+        body_part_ui[body_part[i]->name].body_part_name->setText(QString::asprintf("%s",body_part[i]->name.c_str()));
+        body_part_scrollarea->layout()->addWidget(widget);
     }
 
-//
+    spinner.reset(new ros::AsyncSpinner(2));
+    spinner->start();
 
-//
-//    spinner.reset(new ros::AsyncSpinner(2));
-//    spinner->start();
-//
-//    if(nh->hasParam("number_of_fpgas")){
-//        nh->getParam("number_of_fpgas",number_of_fpgas);
-//        ROS_INFO("found number_of_fpgas %d on parameter server", number_of_fpgas);
-//    }
-//
-//    setpoint_slider_widget_all = widget_->findChild<QSlider *>("motor_setPoint_slider_all");
-//    QObject::connect(setpoint_slider_widget_all, SIGNAL(valueChanged(int)), this, SLOT(setPointAllChangedSlider()));
-//    setpoint_widget_all = widget_->findChild<QLineEdit *>("motor_setPoint_all");
-//    QObject::connect(setpoint_widget_all, SIGNAL(editingFinished()), this, SLOT(setPointAllChanged()));
-//    scale = widget_->findChild<QLineEdit *>("motor_scale");
-//
-//    motorCommand = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand", 1);
-//    ui.stop_button_all->setStyleSheet("background-color: green");
-//    QObject::connect(ui.stop_button_all, SIGNAL(clicked()), this, SLOT(stopButtonAllClicked()));
   }
 
 void RoboyControlCenter::shutdownPlugin() {

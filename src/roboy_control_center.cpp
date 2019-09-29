@@ -15,31 +15,81 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
     // add widget to the user interface
     context.addWidget(widget_);
 
-    QString motorConfigFile = QFileDialog::getOpenFileName(widget_,
-                                                    tr("Select motor config file"), "",
-                                                    tr("motor config file (*.yaml)"));
-    readConfig(motorConfigFile.toStdString());
+    nh = ros::NodeHandlePtr(new ros::NodeHandle);
+    if (!ros::isInitialized()) {
+        int argc = 0;
+        char **argv = NULL;
+        ros::init(argc, argv, "RoboyControlCenter");
+    }
 
+    string configFile;
+    nh->getParam("motorConfigFile", configFile);
+    if(!readConfig(configFile)){
+        motorConfigFile = QFileDialog::getOpenFileName(widget_,
+                                                       tr("Select motor config file"), motorConfigFile,
+                                                       tr("motor config file (*.yaml)"));
+        if(!readConfig(motorConfigFile.toStdString())){
+            ROS_FATAL("could not get any config file, i give up!");
+        }
+    }else{
+        motorConfigFile = QString::fromStdString(configFile);
+    }
+    initTopics(nh);
+    QScrollArea* scrollArea = widget_->findChild<QScrollArea *>("icebus");
+    scrollArea->setWidgetResizable(true);
 
-//    QScrollArea* scrollArea = widget_->findChild<QScrollArea *>("motor_command");
-//    scrollArea->setBackgroundRole(QPalette::Window);
-//    scrollArea->setFrameShadow(QFrame::Plain);
-//    scrollArea->setFrameShape(QFrame::NoFrame);
-//    scrollArea->setWidgetResizable(true);
+    QScrollArea* scrollArea2 = widget_->findChild<QScrollArea *>("motor");
+    scrollArea2->setWidgetResizable(true);
+
+    QWidget *icebus_scrollarea = new QWidget(widget_);
+    icebus_scrollarea->setObjectName("icebus_scrollarea");
+    icebus_scrollarea->setLayout(new QVBoxLayout(icebus_scrollarea));
+    scrollArea->setWidget(icebus_scrollarea);
+
+    QWidget *motor_scrollarea = new QWidget(widget_);
+    motor_scrollarea->setObjectName("motor_scrollarea");
+    motor_scrollarea->setLayout(new QVBoxLayout(motor_scrollarea));
+    scrollArea2->setWidget(motor_scrollarea);
+
+    for(int i=0;i<number_of_icebuses;i++){
+        QWidget *widget = new QWidget(icebus_scrollarea);
+        icebus_ui[i].setupUi(widget);
+        icebus_ui[i].icebus_name->setText(QString::asprintf("icebus%d",i));
+        for(int j=0;j<icebus[i].size();j++){
+            icebus_ui[i].communication_quality->addGraph();
+            icebus_ui[i].communication_quality->graph(j)->setPen(QPen(color_pallette[j%16]));
+            icebus_ui[i].communication_quality->xAxis->setLabel("");
+            icebus_ui[i].communication_quality->yAxis->setLabel("%");
+            icebus_ui[i].communication_quality->yAxis->setLabelPadding(50);
+            icebus_ui[i].communication_quality->yAxis->setRange(0,100);
+            icebus_ui[i].communication_quality->yAxis->setTickLabels(false);
+
+            QWidget *widget2 = new QWidget(motor_scrollarea);
+            motor_ui[icebus[i][j]->motor_id_global].setupUi(widget2);
+            motor_ui[icebus[i][j]->motor_id_global].globalID->setText(QString::asprintf("globalID:  %d",icebus[i][j]->motor_id_global));
+            motor_ui[icebus[i][j]->motor_id_global].icebus->setText(QString::asprintf  ("icebus:    %d",icebus[i][j]->icebus));
+            motor_ui[icebus[i][j]->motor_id_global].icebusID->setText(QString::asprintf("icebusID:  %d",icebus[i][j]->icebus_id));
+            motor_ui[icebus[i][j]->motor_id_global].muscleType->setText(QString::asprintf("%s",icebus[i][j]->muscleType.c_str()));
+            if(icebus[i][j]->muscleType=="myoMuscle")
+                motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: green");
+            else if(icebus[i][j]->muscleType=="myoBrick100")
+                motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: violet");
+            else if(icebus[i][j]->muscleType=="myoBrick300")
+                motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: yellow");
+            else
+                motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: red");
+
+            motor_scrollarea->layout()->addWidget(widget2);
+        }
+        icebus_scrollarea->layout()->addWidget(widget);
+    }
+
+    for(int i=0;i<total_number_of_motors;i++){
+
+    }
+
 //
-//    //vertical box that contains all the checkboxes for the filters
-//    motor_command_scrollarea = new QWidget(widget_);
-//    motor_command_scrollarea->setObjectName("motor_command_scrollarea");
-//    motor_command_scrollarea->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-//    motor_command_scrollarea->setLayout(new QVBoxLayout(motor_command_scrollarea));
-//    scrollArea->setWidget(motor_command_scrollarea);
-//
-//    nh = ros::NodeHandlePtr(new ros::NodeHandle);
-//    if (!ros::isInitialized()) {
-//        int argc = 0;
-//        char **argv = NULL;
-//        ros::init(argc, argv, "motor_command_rqt_plugin");
-//    }
+
 //
 //    spinner.reset(new ros::AsyncSpinner(2));
 //    spinner->start();
@@ -66,12 +116,12 @@ void RoboyControlCenter::shutdownPlugin() {
 
 void RoboyControlCenter::saveSettings(qt_gui_cpp::Settings &plugin_settings,
                                     qt_gui_cpp::Settings &instance_settings) const {
-    // instance_settings.setValue(k, v)
+     instance_settings.setValue("motorConfigFile", motorConfigFile);
 }
 
 void RoboyControlCenter::restoreSettings(const qt_gui_cpp::Settings &plugin_settings,
                                        const qt_gui_cpp::Settings &instance_settings) {
-    // v = instance_settings.value(k)
+    motorConfigFile = instance_settings.value("motorConfigFile").toString();
 }
 
 void RoboyControlCenter::stopButtonAllClicked() {
@@ -79,13 +129,11 @@ void RoboyControlCenter::stopButtonAllClicked() {
     if (ui.stop_button_all->isChecked()) {
         ui.stop_button_all->setStyleSheet("background-color: red");
         msg.request.data = 1;
-        for (uint fpga = 2; fpga <= 6; fpga++)
-            emergencyStop.call(msg);
+        emergencyStop.call(msg);
     } else {
         ui.stop_button_all->setStyleSheet("background-color: green");
         msg.request.data = 0;
-        for (uint fpga = 2; fpga <= 6; fpga++)
-            emergencyStop.call(msg);
+        emergencyStop.call(msg);
     }
 }
 

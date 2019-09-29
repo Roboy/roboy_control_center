@@ -17,6 +17,8 @@
 #include <QLabel>
 #include "icebus.hpp"
 #include <roboy_control_center/ui_roboy_control_center.h>
+#include <roboy_control_center/ui_icebus.h>
+#include <roboy_control_center/ui_motor.h>
 #include <roboy_middleware_msgs/ControlMode.h>
 #include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorConfigService.h>
@@ -48,12 +50,17 @@ public Q_SLOTS:
     void stopButtonAllClicked();
 private:
     Ui::RoboyControlCenter ui;
+    map<int, Ui::Icebus> icebus_ui;
+    map<int, Ui::motor> motor_ui;
+    QColor color_pallette[16] = {Qt::blue, Qt::red, Qt::green, Qt::cyan, Qt::magenta, Qt::darkGray, Qt::darkRed, Qt::darkGreen,
+                                 Qt::darkBlue, Qt::darkCyan, Qt::darkMagenta, Qt::darkYellow, Qt::black, Qt::gray, Qt::green, Qt::cyan};
     QWidget *widget_;
     ros::NodeHandlePtr nh;
     ros::Publisher motorCommand;
     ros::Subscriber motorState, motorInfo;
     ros::ServiceClient motorControl, motorConfig, emergencyStop;
     boost::shared_ptr<ros::AsyncSpinner> spinner;
+    QString motorConfigFile;
 private:
     vector<QWidget*> widgets;
 };

@@ -27,10 +27,18 @@ catkin_package(INCLUDE_DIRS include LIBRARIES ${PROJECT_NAME}
 
 if ("${qt_gui_cpp_USE_QT_MAJOR_VERSION} " STREQUAL "5 ")
     qt5_wrap_cpp(roboy_control_center_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
+    qt5_wrap_cpp(icebus_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
+    qt5_wrap_cpp(motor_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
     qt5_wrap_ui(roboy_control_center_UIS_H src/roboy_control_center.ui)
+    qt5_wrap_ui(icebus_UIS_H src/icebus.ui)
+    qt5_wrap_ui(motor_UIS_H src/motor.ui)
 else ()
     qt4_wrap_cpp(roboy_control_center_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
+    qt4_wrap_cpp(icebus_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
+    qt4_wrap_cpp(motor_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
     qt4_wrap_ui(roboy_control_center_UIS_H src/roboy_control_center.ui)
+    qt4_wrap_ui(icebus_UIS_H src/icebus.ui)
+    qt4_wrap_ui(motor_UIS_H src/motor.ui)
 endif ()
 
 include_directories(
@@ -42,7 +50,7 @@ include_directories(
 )
 
 add_library(roboy_control_center src/roboy_control_center.cpp ${roboy_control_center_MOCS} ${roboy_control_center_UIS_H}
-        qcustomplot/qcustomplot.cpp)
+        qcustomplot/qcustomplot.cpp ${icebus_MOCS} ${icebus_UIS_H} ${motor_MOCS} ${motor_UIS_H} )
 
 add_dependencies(roboy_control_center roboy_middleware_msgs_gencpp)
 

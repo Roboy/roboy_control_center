@@ -21,7 +21,7 @@ public:
 
     };
 
-    void init(){
+    void initTopics(NodeHandlePtr nh){
         motorState = nh->subscribe("/roboy/middleware/MotorState",1,&Icebus::MotorState, this);
         motorInfo = nh->subscribe("/roboy/middleware/MotorInfo",1,&Icebus::MotorInfo, this);
     }
@@ -71,7 +71,6 @@ public:
         }
     };
 
-    NodeHandlePtr nh;
     Subscriber motorState, motorInfo;
     int samples = 100;
     QVector<double> motorStateTimeStamps, motorInfoTimeStamps;

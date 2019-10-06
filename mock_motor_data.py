@@ -30,7 +30,6 @@ while not rospy.is_shutdown():
         msg.icebus = i
         control_mode = []
         for j in range(number_of_motors_per_icebus[i]):
-            msg.setpoint.append(random.randint(-10000,10000))
             control_mode.append(0)
             msg.Kp.append(random.randint(0,10))
             msg.Ki.append(random.randint(0,10))
@@ -47,6 +46,7 @@ while not rospy.is_shutdown():
         msg = roboy_middleware_msgs.msg.MotorState()
         msg.icebus = i
         for j in range(number_of_motors_per_icebus[i]):
+            msg.setpoint.append(random.randint(-10000,10000))
             msg.encoder0_pos.append(random.randint(-10000,10000))
             msg.encoder1_pos.append(random.randint(-10000,10000))
             msg.displacement.append(random.randint(-10000,10000))

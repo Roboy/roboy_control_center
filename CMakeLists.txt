@@ -44,11 +44,11 @@ if ("${qt_gui_cpp_USE_QT_MAJOR_VERSION} " STREQUAL "5 ")
             src/motor.ui
             )
 else ()
-    qt5_wrap_cpp(roboy_control_center_MOCS
+    qt4_wrap_cpp(roboy_control_center_MOCS
             roboy_control_center.hpp
             icebus.hpp
             qcustomplot/qcustomplot.h)
-    qt5_wrap_ui(roboy_control_center_UIS_H
+    qt4_wrap_ui(roboy_control_center_UIS_H
             src/roboy_control_center.ui
             src/icebus.ui
             src/motor.ui

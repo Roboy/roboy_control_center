@@ -51,6 +51,11 @@ public Q_SLOTS:
     void stopButtonAllClicked();
     void plotMotorInfo();
     void plotMotorState();
+    void plotData();
+    void focusEncoder0Plot(QCPAbstractPlottable *plottable, QMouseEvent* event);
+    void focusEncoder1Plot(QCPAbstractPlottable *plottable, QMouseEvent* event);
+    void focusDisplacementPlot(QCPAbstractPlottable *plottable, QMouseEvent* event);
+    void focusCurrentPlot(QCPAbstractPlottable *plottable, QMouseEvent* event);
 private:
     Ui::RoboyControlCenter ui;
     map<int, Ui::Icebus> icebus_ui;
@@ -67,4 +72,6 @@ private:
     QString motorConfigFile;
 private:
     vector<QWidget*> widgets;
+    QMetaObject::Connection plotConnection;
+    QVector<double> *x,*y;
 };

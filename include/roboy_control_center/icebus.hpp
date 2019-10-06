@@ -90,7 +90,7 @@ public:
         void triggerMotorInfoUpdate();
 public:
     Subscriber motorState, motorInfo;
-    int samples = 100;
+    int samples = 500;
     QVector<double> motorStateTimeStamps, motorInfoTimeStamps;
     map<int, QVector<double>> encoder0_pos,encoder1_pos,displacement,current,communication_quality, setpoint, pwm;
     map<int, int> control_mode, Kp, Ki, Kd, deadband, IntegralLimit, PWMLimit, gearBoxRatio;

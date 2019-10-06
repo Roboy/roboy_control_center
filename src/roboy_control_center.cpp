@@ -246,22 +246,47 @@ void RoboyControlCenter::plotData(){
 
 void RoboyControlCenter::focusEncoder0Plot(QCPAbstractPlottable *plottable, QMouseEvent* event){
     QObject::disconnect(plotConnection);
-    ROS_INFO("encoder0 %s", plottable->name().toStdString().c_str());
     int m = plottable->name().toInt();
     ui.plot->clearGraphs();
     ui.plot->addGraph();
+    ui.plot->graph(0)->setPen(QColor(Qt::blue));
+    ui.plot->yAxis->setLabel("encoder0_pos[ticks]");
     x = &motorStateTimeStamps;
     y = &encoder0_pos[m];
     plotConnection = QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotData()));
 }
 void RoboyControlCenter::focusEncoder1Plot(QCPAbstractPlottable *plottable, QMouseEvent* event){
-    ROS_INFO("encoder1 %s", plottable->name().toStdString().c_str());
+    QObject::disconnect(plotConnection);
+    int m = plottable->name().toInt();
+    ui.plot->clearGraphs();
+    ui.plot->addGraph();
+    ui.plot->graph(0)->setPen(QColor(Qt::red));
+    ui.plot->yAxis->setLabel("encoder1_pos[ticks]");
+    x = &motorStateTimeStamps;
+    y = &encoder0_pos[m];
+    plotConnection = QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotData()));
 }
 void RoboyControlCenter::focusDisplacementPlot(QCPAbstractPlottable *plottable, QMouseEvent* event){
-    ROS_INFO("displacment %s", plottable->name().toStdString().c_str());
+    QObject::disconnect(plotConnection);
+    int m = plottable->name().toInt();
+    ui.plot->clearGraphs();
+    ui.plot->addGraph();
+    ui.plot->graph(0)->setPen(QColor(Qt::green));
+    ui.plot->yAxis->setLabel("displacement[ticks]");
+    x = &motorStateTimeStamps;
+    y = &encoder0_pos[m];
+    plotConnection = QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotData()));
 }
 void RoboyControlCenter::focusCurrentPlot(QCPAbstractPlottable *plottable, QMouseEvent* event){
-    ROS_INFO("current %s", plottable->name().toStdString().c_str());
+    QObject::disconnect(plotConnection);
+    int m = plottable->name().toInt();
+    ui.plot->clearGraphs();
+    ui.plot->addGraph();
+    ui.plot->graph(0)->setPen(QColor(Qt::darkBlue));
+    ui.plot->yAxis->setLabel("current[mA]");
+    x = &motorStateTimeStamps;
+    y = &encoder0_pos[m];
+    plotConnection = QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotData()));
 }
 
 PLUGINLIB_EXPORT_CLASS(RoboyControlCenter, rqt_gui_cpp::Plugin)

@@ -46,18 +46,18 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
 
     QWidget *icebus_scrollarea = new QWidget(widget_);
     icebus_scrollarea->setObjectName("icebus_scrollarea");
+    icebus_scrollarea->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     icebus_scrollarea->setLayout(new QVBoxLayout(icebus_scrollarea));
-    scrollArea->setWidget(icebus_scrollarea);
 
     QWidget *motor_scrollarea = new QWidget(widget_);
     motor_scrollarea->setObjectName("motor_scrollarea");
+    motor_scrollarea->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     motor_scrollarea->setLayout(new QVBoxLayout(motor_scrollarea));
-    scrollArea2->setWidget(motor_scrollarea);
 
     QWidget *body_part_scrollarea = new QWidget(widget_);
     body_part_scrollarea->setObjectName("bodypart_scrollarea");
+    body_part_scrollarea->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     body_part_scrollarea->setLayout(new QVBoxLayout(motor_scrollarea));
-    scrollArea3->setWidget(body_part_scrollarea);
 
     for(int i=0;i<number_of_icebuses;i++){
         QWidget *widget = new QWidget(icebus_scrollarea);
@@ -73,6 +73,7 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
             icebus_ui[i].communication_quality->yAxis->setTickLabels(false);
 
             QWidget *widget2 = new QWidget(motor_scrollarea);
+            widget2->setFixedSize(1031,251);
             motor_ui[icebus[i][j]->motor_id_global].setupUi(widget2);
             motor_ui[icebus[i][j]->motor_id_global].globalID->setText(QString::asprintf("globalID:  %d",icebus[i][j]->motor_id_global));
             motor_ui[icebus[i][j]->motor_id_global].icebus->setText(QString::asprintf  ("icebus:    %d",icebus[i][j]->icebus));
@@ -91,23 +92,31 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
             motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->graph(0)->setPen(QColor(Qt::blue));
             motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->graph(1)->setPen(QColor(Qt::lightGray));
             motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->xAxis->setTickLabels(false);
+            motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->setAttribute(Qt::WA_NoMousePropagation, false);
             motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->addGraph();
             motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->addGraph();
             motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->graph(0)->setPen(QColor(Qt::red));
             motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->graph(1)->setPen(QColor(Qt::lightGray));
             motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->xAxis->setTickLabels(false);
+            motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->setAttribute(Qt::WA_NoMousePropagation, false);
             motor_ui[icebus[i][j]->motor_id_global].displacement->addGraph();
             motor_ui[icebus[i][j]->motor_id_global].displacement->addGraph();
             motor_ui[icebus[i][j]->motor_id_global].displacement->graph(0)->setPen(QColor(Qt::green));
             motor_ui[icebus[i][j]->motor_id_global].displacement->graph(1)->setPen(QColor(Qt::lightGray));
             motor_ui[icebus[i][j]->motor_id_global].displacement->xAxis->setTickLabels(false);
+            motor_ui[icebus[i][j]->motor_id_global].displacement->setAttribute(Qt::WA_NoMousePropagation, false);
             motor_ui[icebus[i][j]->motor_id_global].current->addGraph();
             motor_ui[icebus[i][j]->motor_id_global].current->graph(0)->setPen(QColor(Qt::darkBlue));
             motor_ui[icebus[i][j]->motor_id_global].current->xAxis->setTickLabels(false);
+            motor_ui[icebus[i][j]->motor_id_global].current->setAttribute(Qt::WA_NoMousePropagation, false);
             motor_scrollarea->layout()->addWidget(widget2);
         }
         icebus_scrollarea->layout()->addWidget(widget);
     }
+
+    scrollArea->setWidget(icebus_scrollarea);
+    scrollArea2->setWidget(motor_scrollarea);
+    scrollArea3->setWidget(body_part_scrollarea);
 
     for(int i=0;i<body_part.size();i++){
         QWidget *widget = new QWidget(body_part_scrollarea);
@@ -173,9 +182,15 @@ void RoboyControlCenter::plotMotorState() {
             switch(control_mode[motor_id_global]){
                 case 0:
                     motor_ui[motor_id_global].encoder0_pos->graph(1)->setData(motorStateTimeStamps, setpoint[motor_id_global]);
+                    motor_ui[motor_id_global].encoder1_pos->graph(1)->clearData();
+                    motor_ui[motor_id_global].displacement->graph(1)->clearData();
                 case 1:
+                    motor_ui[motor_id_global].encoder0_pos->graph(1)->clearData();
                     motor_ui[motor_id_global].encoder1_pos->graph(1)->setData(motorStateTimeStamps, setpoint[motor_id_global]);
+                    motor_ui[motor_id_global].displacement->graph(1)->clearData();
                 case 2:
+                    motor_ui[motor_id_global].encoder0_pos->graph(1)->clearData();
+                    motor_ui[motor_id_global].encoder1_pos->graph(1)->clearData();
                     motor_ui[motor_id_global].displacement->graph(1)->setData(motorStateTimeStamps, setpoint[motor_id_global]);
             }
             motor_ui[motor_id_global].encoder0_pos->rescaleAxes();

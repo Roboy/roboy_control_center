@@ -33,7 +33,7 @@
 using namespace std;
 
 class RoboyControlCenter
-        : public rqt_gui_cpp::Plugin, Icebus {
+        : public Icebus {
     Q_OBJECT
 public:
     RoboyControlCenter();
@@ -49,6 +49,8 @@ public:
                                  const qt_gui_cpp::Settings &instance_settings);
 public Q_SLOTS:
     void stopButtonAllClicked();
+    void plotMotorInfo();
+    void plotMotorState();
 private:
     Ui::RoboyControlCenter ui;
     map<int, Ui::Icebus> icebus_ui;

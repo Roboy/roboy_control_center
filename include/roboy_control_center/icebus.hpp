@@ -8,6 +8,7 @@
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/MotorInfo.h>
 #include <map>
+#include <rqt_gui_cpp/plugin.h>
 
 #endif
 
@@ -15,9 +16,10 @@ using namespace std;
 using namespace ros;
 using namespace roboy_middleware_msgs;
 
-class Icebus:public MotorConfig{
+class Icebus:public rqt_gui_cpp::Plugin,public MotorConfig{
+    Q_OBJECT
 public:
-    Icebus(){
+    Icebus():rqt_gui_cpp::Plugin(){
 
     };
 
@@ -33,14 +35,20 @@ public:
             encoder0_pos[motor_id_global].push_back(msg->encoder0_pos[i]);
             encoder1_pos[motor_id_global].push_back(msg->encoder1_pos[i]);
             displacement[motor_id_global].push_back(msg->displacement[i]);
+            current[motor_id_global].push_back(msg->current[i]);
             if(motorStateTimeStamps.size()>samples){
                 encoder0_pos[motor_id_global].pop_front();
                 encoder1_pos[motor_id_global].pop_front();
                 displacement[motor_id_global].pop_front();
+                current[motor_id_global].pop_front();
             }
         }
         if(motorStateTimeStamps.size()>samples){
             motorStateTimeStamps.pop_front();
+        }
+        if((motorStateTimeStamps.back()-lastMotorStateUpdate)>0.1){ // update at 10Hz
+            lastMotorStateUpdate = motorStateTimeStamps.back();
+            Q_EMIT triggerMotorStateUpdate();
         }
     };
 
@@ -69,11 +77,20 @@ public:
         if(motorInfoTimeStamps.size()>samples){
             motorInfoTimeStamps.pop_front();
         }
+        if((motorInfoTimeStamps.back()-lastMotorInfoUpdate)>1){ // update at 10Hz
+            lastMotorInfoUpdate = motorInfoTimeStamps.back();
+            Q_EMIT triggerMotorInfoUpdate();
+        }
     };
 
+    Q_SIGNALS:
+        void triggerMotorStateUpdate();
+        void triggerMotorInfoUpdate();
+public:
     Subscriber motorState, motorInfo;
     int samples = 100;
     QVector<double> motorStateTimeStamps, motorInfoTimeStamps;
     map<int, QVector<double>> encoder0_pos,encoder1_pos,displacement,current,communication_quality, setpoint, pwm;
     map<int, int> control_mode, Kp, Ki, Kd, deadband, IntegralLimit, PWMLimit, gearBoxRatio;
+    double lastMotorStateUpdate, lastMotorInfoUpdate;
 };

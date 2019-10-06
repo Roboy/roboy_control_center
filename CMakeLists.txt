@@ -25,26 +25,6 @@ catkin_package(INCLUDE_DIRS include LIBRARIES ${PROJECT_NAME}
         CATKIN_DEPENDS roscpp rqt_gui_cpp std_msgs roboy_middleware_msgs common_utilities
         DEPENDS YAML_CPP)
 
-if ("${qt_gui_cpp_USE_QT_MAJOR_VERSION} " STREQUAL "5 ")
-    qt5_wrap_cpp(roboy_control_center_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
-    qt5_wrap_ui(roboy_control_center_UIS_H src/roboy_control_center.ui)
-    qt5_wrap_cpp(icebus_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
-    qt5_wrap_ui(icebus_UIS_H src/icebus.ui)
-    qt5_wrap_cpp(motor_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
-    qt5_wrap_ui(motor_UIS_H src/motor.ui)
-    qt5_wrap_ui(body_part_UIS_H src/body_part.ui)
-    qt5_wrap_cpp(body_part_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
-else ()
-    qt5_wrap_cpp(roboy_control_center_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
-    qt5_wrap_ui(roboy_control_center_UIS_H src/roboy_control_center.ui)
-    qt5_wrap_cpp(icebus_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
-    qt5_wrap_ui(icebus_UIS_H src/icebus.ui)
-    qt5_wrap_cpp(motor_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
-    qt5_wrap_ui(motor_UIS_H src/motor.ui)
-    qt5_wrap_ui(body_part_UIS_H src/body_part.ui)
-    qt5_wrap_cpp(body_part_MOCS include/roboy_control_center/roboy_control_center.hpp qcustomplot/qcustomplot.h)
-endif ()
-
 include_directories(
         include/
         include/roboy_control_center/
@@ -53,8 +33,32 @@ include_directories(
         ${YAML_CPP_INCLUDE_DIR}
 )
 
+if ("${qt_gui_cpp_USE_QT_MAJOR_VERSION} " STREQUAL "5 ")
+    qt5_wrap_cpp(roboy_control_center_MOCS
+            include/roboy_control_center/roboy_control_center.hpp
+            include/roboy_control_center/icebus.hpp
+            qcustomplot/qcustomplot.h)
+    qt5_wrap_ui(roboy_control_center_UIS_H
+            src/roboy_control_center.ui
+            src/icebus.ui
+            src/motor.ui
+            )
+else ()
+    qt5_wrap_cpp(roboy_control_center_MOCS
+            roboy_control_center.hpp
+            icebus.hpp
+            qcustomplot/qcustomplot.h)
+    qt5_wrap_ui(roboy_control_center_UIS_H
+            src/roboy_control_center.ui
+            src/icebus.ui
+            src/motor.ui
+            )
+endif ()
+
+
+
 add_library(roboy_control_center src/roboy_control_center.cpp ${roboy_control_center_MOCS} ${roboy_control_center_UIS_H}
-        qcustomplot/qcustomplot.cpp ${icebus_MOCS} ${icebus_UIS_H} ${motor_MOCS} ${motor_UIS_H} ${body_part_MOCS} ${body_part_UIS_H})
+        qcustomplot/qcustomplot.cpp )
 
 add_dependencies(roboy_control_center roboy_middleware_msgs_gencpp)
 

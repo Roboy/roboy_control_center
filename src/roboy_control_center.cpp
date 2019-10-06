@@ -1,8 +1,8 @@
 #include <roboy_control_center/roboy_control_center.hpp>
 
 RoboyControlCenter::RoboyControlCenter()
-        : rqt_gui_cpp::Plugin(), widget_(0) {
-    setObjectName("RoboyControlCenter");
+        : widget_(0) {
+    this->setObjectName("RoboyControlCenter");
 }
 
 void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
@@ -86,7 +86,24 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
                 motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: yellow");
             else
                 motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: red");
-
+            motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->addGraph();
+            motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->addGraph();
+            motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->graph(0)->setPen(QColor(Qt::blue));
+            motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->graph(1)->setPen(QColor(Qt::lightGray));
+            motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->xAxis->setTickLabels(false);
+            motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->addGraph();
+            motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->addGraph();
+            motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->graph(0)->setPen(QColor(Qt::red));
+            motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->graph(1)->setPen(QColor(Qt::lightGray));
+            motor_ui[icebus[i][j]->motor_id_global].encoder1_pos->xAxis->setTickLabels(false);
+            motor_ui[icebus[i][j]->motor_id_global].displacement->addGraph();
+            motor_ui[icebus[i][j]->motor_id_global].displacement->addGraph();
+            motor_ui[icebus[i][j]->motor_id_global].displacement->graph(0)->setPen(QColor(Qt::green));
+            motor_ui[icebus[i][j]->motor_id_global].displacement->graph(1)->setPen(QColor(Qt::lightGray));
+            motor_ui[icebus[i][j]->motor_id_global].displacement->xAxis->setTickLabels(false);
+            motor_ui[icebus[i][j]->motor_id_global].current->addGraph();
+            motor_ui[icebus[i][j]->motor_id_global].current->graph(0)->setPen(QColor(Qt::darkBlue));
+            motor_ui[icebus[i][j]->motor_id_global].current->xAxis->setTickLabels(false);
             motor_scrollarea->layout()->addWidget(widget2);
         }
         icebus_scrollarea->layout()->addWidget(widget);
@@ -98,6 +115,9 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
         body_part_ui[body_part[i]->name].body_part_name->setText(QString::asprintf("%s",body_part[i]->name.c_str()));
         body_part_scrollarea->layout()->addWidget(widget);
     }
+
+    QObject::connect(this, SIGNAL(triggerMotorInfoUpdate()), this, SLOT(plotMotorInfo()));
+    QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotMotorState()));
 
     spinner.reset(new ros::AsyncSpinner(2));
     spinner->start();
@@ -128,6 +148,45 @@ void RoboyControlCenter::stopButtonAllClicked() {
         ui.stop_button_all->setStyleSheet("background-color: green");
         msg.request.data = 0;
         emergencyStop.call(msg);
+    }
+}
+
+void RoboyControlCenter::plotMotorInfo() {
+    for(int i=0;i<number_of_icebuses;i++){
+        for(int j=0;j<icebus[i].size();j++) {
+            int motor_id_global = icebus[i][j]->motor_id_global;
+            icebus_ui[i].communication_quality->graph(j)->setData(motorInfoTimeStamps, communication_quality[motor_id_global]);
+            icebus_ui[i].communication_quality->xAxis->rescale();
+            icebus_ui[i].communication_quality->replot();
+        }
+    }
+}
+
+void RoboyControlCenter::plotMotorState() {
+    for(int i=0;i<number_of_icebuses;i++){
+        for(int j=0;j<icebus[i].size();j++) {
+            int motor_id_global = icebus[i][j]->motor_id_global;
+            motor_ui[motor_id_global].encoder0_pos->graph(0)->setData(motorStateTimeStamps, encoder0_pos[motor_id_global]);
+            motor_ui[motor_id_global].encoder1_pos->graph(0)->setData(motorStateTimeStamps, encoder1_pos[motor_id_global]);
+            motor_ui[motor_id_global].displacement->graph(0)->setData(motorStateTimeStamps, displacement[motor_id_global]);
+            motor_ui[motor_id_global].current->graph(0)->setData(motorStateTimeStamps, current[motor_id_global]);
+            switch(control_mode[motor_id_global]){
+                case 0:
+                    motor_ui[motor_id_global].encoder0_pos->graph(1)->setData(motorStateTimeStamps, setpoint[motor_id_global]);
+                case 1:
+                    motor_ui[motor_id_global].encoder1_pos->graph(1)->setData(motorStateTimeStamps, setpoint[motor_id_global]);
+                case 2:
+                    motor_ui[motor_id_global].displacement->graph(1)->setData(motorStateTimeStamps, setpoint[motor_id_global]);
+            }
+            motor_ui[motor_id_global].encoder0_pos->rescaleAxes();
+            motor_ui[motor_id_global].encoder1_pos->rescaleAxes();
+            motor_ui[motor_id_global].displacement->rescaleAxes();
+            motor_ui[motor_id_global].current->rescaleAxes();
+            motor_ui[motor_id_global].encoder0_pos->replot();
+            motor_ui[motor_id_global].encoder1_pos->replot();
+            motor_ui[motor_id_global].displacement->replot();
+            motor_ui[motor_id_global].current->replot();
+        }
     }
 }
 

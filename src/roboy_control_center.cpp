@@ -35,7 +35,7 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
     }else{
         motorConfigFile = QString::fromStdString(configFile);
     }
-    initTopics(nh);
+
     QScrollArea* scrollArea = widget_->findChild<QScrollArea *>("icebus");
     scrollArea->setWidgetResizable(true);
 
@@ -153,6 +153,7 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
     spinner.reset(new ros::AsyncSpinner(2));
     spinner->start();
 
+    initTopics(nh);
   }
 
 void RoboyControlCenter::shutdownPlugin() {

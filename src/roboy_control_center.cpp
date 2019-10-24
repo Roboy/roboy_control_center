@@ -76,7 +76,7 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
             icebus_ui[i].communication_quality->yAxis->setSubTickCount(10);
 
             QWidget *widget2 = new QWidget(motor_scrollarea);
-            widget2->setFixedSize(1031,251);
+            widget2->setFixedSize(1381,251);
             motor_ui[icebus[i][j]->motor_id_global].setupUi(widget2);
             motor_ui[icebus[i][j]->motor_id_global].globalID->setText(QString::asprintf("globalID:  %d",icebus[i][j]->motor_id_global));
             motor_ui[icebus[i][j]->motor_id_global].icebus->setText(QString::asprintf  ("icebus:    %d",icebus[i][j]->icebus));
@@ -131,6 +131,14 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
             QObject::connect(motor_ui[icebus[i][j]->motor_id_global].current,
                              SIGNAL(plottableDoubleClick(QCPAbstractPlottable*, QMouseEvent*)),
                              this, SLOT(focusCurrentPlot(QCPAbstractPlottable*, QMouseEvent*)));
+            QObject::connect(motor_ui[icebus[i][j]->motor_id_global].setpoint_slider,
+                             SIGNAL(sliderReleased()),
+                             this, SLOT(resetSliders()));
+            QObject::connect(motor_ui[icebus[i][j]->motor_id_global].setpoint_slider,
+                             SIGNAL(sliderMoved(int)),
+                             this, SLOT(sliderMoved()));
+            setpoints[icebus[i][j]->motor_id_global] = 0;
+            motor_ui[icebus[i][j]->motor_id_global].setpoint_slider->setObjectName(QString::number(icebus[i][j]->motor_id_global));
             motor_scrollarea->layout()->addWidget(widget2);
         }
         icebus_scrollarea->layout()->addWidget(widget);
@@ -288,6 +296,23 @@ void RoboyControlCenter::focusCurrentPlot(QCPAbstractPlottable *plottable, QMous
     x = &motorStateTimeStamps;
     y = &encoder0_pos[m];
     plotConnection = QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotData()));
+}
+
+void RoboyControlCenter::resetSliders(){
+    for(auto &m:motor_ui){
+        m.second.setpoint_slider->setValue(50);
+    }
+}
+
+void RoboyControlCenter::sliderMoved(){
+    roboy_middleware_msgs::MotorCommand msg;
+    for(auto &m:motor_ui){
+        int global_id = m.second.setpoint_slider->objectName().toInt();
+        setpoints[global_id]+=(m.second.setpoint_slider->value()-50);
+        msg.motor.push_back(global_id);
+        msg.setpoint.push_back(setpoints[global_id]);
+    }
+    motorCommand.publish(msg);
 }
 
 PLUGINLIB_EXPORT_CLASS(RoboyControlCenter, rqt_gui_cpp::Plugin)

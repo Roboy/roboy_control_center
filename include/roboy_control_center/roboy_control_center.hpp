@@ -56,6 +56,8 @@ public Q_SLOTS:
     void focusEncoder1Plot(QCPAbstractPlottable *plottable, QMouseEvent* event);
     void focusDisplacementPlot(QCPAbstractPlottable *plottable, QMouseEvent* event);
     void focusCurrentPlot(QCPAbstractPlottable *plottable, QMouseEvent* event);
+    void resetSliders();
+    void sliderMoved();
 private:
     Ui::RoboyControlCenter ui;
     map<int, Ui::Icebus> icebus_ui;
@@ -65,13 +67,12 @@ private:
                                  Qt::darkBlue, Qt::darkCyan, Qt::darkMagenta, Qt::darkYellow, Qt::black, Qt::gray, Qt::green, Qt::cyan};
     QWidget *widget_;
     ros::NodeHandlePtr nh;
-    ros::Publisher motorCommand;
-    ros::Subscriber motorState, motorInfo;
     ros::ServiceClient motorControl, motorConfig, emergencyStop;
     boost::shared_ptr<ros::AsyncSpinner> spinner;
     QString motorConfigFile;
 private:
     vector<QWidget*> widgets;
+    map<int,float> setpoints;
     QMetaObject::Connection plotConnection;
     QVector<double> *x,*y;
 };

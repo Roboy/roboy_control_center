@@ -5,6 +5,7 @@
 #include <ros/ros.h>
 #include <common_utilities/CommonDefinitions.h>
 #include <common_utilities/MotorConfig.hpp>
+#include <roboy_middleware_msgs/MotorCommand.h>
 #include <roboy_middleware_msgs/MotorState.h>
 #include <roboy_middleware_msgs/MotorInfo.h>
 #include <map>
@@ -27,6 +28,7 @@ public:
         startTime = ros::Time::now().toSec();
         motorState = nh->subscribe("/roboy/middleware/MotorState",1,&Icebus::MotorState, this);
         motorInfo = nh->subscribe("/roboy/middleware/MotorInfo",1,&Icebus::MotorInfo, this);
+        motorCommand = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
     }
 
     void MotorState(const MotorStateConstPtr &msg){
@@ -39,7 +41,7 @@ public:
             displacement[motor_id_global].push_back(msg->displacement[i]);
             current[motor_id_global].push_back(msg->current[i]);
             if(motorStateTimeStamps.size()>samples){
-                setpoint[motor_id_global].push_back(msg->setpoint[i]);
+                setpoint[motor_id_global].pop_front();
                 encoder0_pos[motor_id_global].pop_front();
                 encoder1_pos[motor_id_global].pop_front();
                 displacement[motor_id_global].pop_front();
@@ -71,7 +73,6 @@ public:
             gearBoxRatio[motor_id_global] = msg->gearBoxRatio[i];
 
             if(motorInfoTimeStamps.size()>samples){
-                setpoint[motor_id_global].pop_front();
                 pwm[motor_id_global].pop_front();
                 communication_quality[motor_id_global].pop_front();
             }
@@ -90,6 +91,7 @@ public:
         void triggerMotorInfoUpdate();
 public:
     Subscriber motorState, motorInfo;
+    Publisher motorCommand;
     int samples = 500;
     QVector<double> motorStateTimeStamps, motorInfoTimeStamps;
     map<int, QVector<double>> encoder0_pos,encoder1_pos,displacement,current,communication_quality, setpoint, pwm;

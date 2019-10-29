@@ -32,7 +32,7 @@ public:
     void MotorState(const MotorStateConstPtr &msg){
         motorStateTimeStamps.push_back(ros::Time::now().toSec()-startTime);
         for(int i=0;i<msg->encoder0_pos.size();i++){
-            int motor_id_global = icebus[msg->icebus][i]->motor_id_global;
+            int motor_id_global = icebus[0/*msg->icebus*/][i]->motor_id_global;
             setpoint[motor_id_global].push_back(msg->setpoint[i]);
             encoder0_pos[motor_id_global].push_back(msg->encoder0_pos[i]);
             encoder1_pos[motor_id_global].push_back(msg->encoder1_pos[i]);
@@ -58,7 +58,7 @@ public:
     void MotorInfo(const MotorInfoConstPtr &msg){
         motorInfoTimeStamps.push_back(ros::Time::now().toSec()-startTime);
         for(int i=0;i<msg->communication_quality.size();i++){
-            int motor_id_global = icebus[msg->icebus][i]->motor_id_global;
+            int motor_id_global = icebus[0/*msg->icebus*/][i]->motor_id_global;
             control_mode[motor_id_global] = msg->control_mode[i];
             Kp[motor_id_global] = msg->Kp[i];
             Ki[motor_id_global] = msg->Ki[i];

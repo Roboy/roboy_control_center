@@ -79,8 +79,8 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
             widget2->setFixedSize(1381,251);
             motor_ui[icebus[i][j]->motor_id_global].setupUi(widget2);
             motor_ui[icebus[i][j]->motor_id_global].globalID->setText(QString::asprintf("globalID:  %d",icebus[i][j]->motor_id_global));
-            motor_ui[icebus[i][j]->motor_id_global].icebus->setText(QString::asprintf  ("icebus:    %d",icebus[i][j]->icebus));
-            motor_ui[icebus[i][j]->motor_id_global].icebusID->setText(QString::asprintf("icebusID:  %d",icebus[i][j]->icebus_id));
+            motor_ui[icebus[i][j]->motor_id_global].icebus->setText(QString::asprintf  ("icebus:    %d",icebus[i][j]->bus));
+            motor_ui[icebus[i][j]->motor_id_global].icebusID->setText(QString::asprintf("icebusID:  %d",icebus[i][j]->bus_id));
             motor_ui[icebus[i][j]->motor_id_global].muscleType->setText(QString::asprintf("%s",icebus[i][j]->muscleType.c_str()));
             if(icebus[i][j]->muscleType=="myoMuscle")
                 motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: green");

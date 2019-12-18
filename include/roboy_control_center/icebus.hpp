@@ -26,8 +26,13 @@ public:
 
     void initTopics(NodeHandlePtr nh){
         startTime = ros::Time::now().toSec();
-        motorState = nh->subscribe("/roboy/middleware/MotorState",1,&Icebus::MotorState, this);
-        motorInfo = nh->subscribe("/roboy/middleware/MotorInfo",1,&Icebus::MotorInfo, this);
+        if(!icebus.empty()) {
+            motorState = nh->subscribe("/roboy/middleware/MotorState", 1, &Icebus::MotorState, this);
+            motorInfo = nh->subscribe("/roboy/middleware/MotorInfo", 1, &Icebus::MotorInfo, this);
+        }
+        if(!myobus.empty()){
+
+        }
         motorCommand = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
     }
 
@@ -90,7 +95,7 @@ public:
         void triggerMotorStateUpdate();
         void triggerMotorInfoUpdate();
 public:
-    Subscriber motorState, motorInfo;
+    Subscriber motorState, motorInfo, motorStatus;
     Publisher motorCommand;
     int samples = 500;
     QVector<double> motorStateTimeStamps, motorInfoTimeStamps;

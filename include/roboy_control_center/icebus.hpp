@@ -75,7 +75,7 @@ public:
             PWMLimit[motor_id_global] = msg->PWMLimit[i];
             pwm[motor_id_global].push_back(msg->pwm[i]);
             communication_quality[motor_id_global].push_back(msg->communication_quality[i]);
-            gearBoxRatio[motor_id_global] = msg->gearBoxRatio[i];
+            neopixelColor[motor_id_global] = msg->neopixelColor[i];
 
             if(motorInfoTimeStamps.size()>samples){
                 pwm[motor_id_global].pop_front();
@@ -100,6 +100,6 @@ public:
     int samples = 500;
     QVector<double> motorStateTimeStamps, motorInfoTimeStamps;
     map<int, QVector<double>> encoder0_pos,encoder1_pos,displacement,current,communication_quality, setpoint, pwm;
-    map<int, int> control_mode, Kp, Ki, Kd, deadband, IntegralLimit, PWMLimit, gearBoxRatio;
+    map<int, int> control_mode, Kp, Ki, Kd, deadband, IntegralLimit, PWMLimit, neopixelColor;
     double lastMotorStateUpdate, lastMotorInfoUpdate, startTime;
 };

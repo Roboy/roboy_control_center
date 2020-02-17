@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1647</width>
-    <height>1063</height>
+    <width>1487</width>
+    <height>798</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -60,7 +60,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -71,7 +71,7 @@
       <rect>
        <x>0</x>
        <y>50</y>
-       <width>1197</width>
+       <width>1130</width>
        <height>600</height>
       </rect>
      </property>
@@ -83,7 +83,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1195</width>
+        <width>1128</width>
         <height>598</height>
        </rect>
       </property>
@@ -120,7 +120,7 @@
       <rect>
        <x>0</x>
        <y>47</y>
-       <width>1197</width>
+       <width>1200</width>
        <height>600</height>
       </rect>
      </property>
@@ -132,7 +132,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1195</width>
+        <width>1198</width>
         <height>598</height>
        </rect>
       </property>
@@ -141,7 +141,7 @@
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>70</x>
        <y>10</y>
        <width>171</width>
        <height>31</height>
@@ -162,7 +162,7 @@
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>420</x>
+       <x>250</x>
        <y>10</y>
        <width>171</width>
        <height>31</height>
@@ -183,7 +183,7 @@
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>650</x>
+       <x>450</x>
        <y>10</y>
        <width>171</width>
        <height>31</height>
@@ -204,7 +204,7 @@
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
-       <x>880</x>
+       <x>650</x>
        <y>10</y>
        <width>171</width>
        <height>31</height>
@@ -270,9 +270,9 @@
   <widget class="QScrollArea" name="quick_access">
    <property name="geometry">
     <rect>
-     <x>1210</x>
+     <x>1142</x>
      <y>57</y>
-     <width>273</width>
+     <width>341</width>
      <height>651</height>
     </rect>
    </property>
@@ -284,7 +284,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>271</width>
+      <width>339</width>
       <height>649</height>
      </rect>
     </property>

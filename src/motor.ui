@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1381</width>
-    <height>251</height>
+    <width>1120</width>
+    <height>180</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,8 +24,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1381</width>
-     <height>251</height>
+     <width>1120</width>
+     <height>180</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -43,8 +43,8 @@
    <widget class="QLabel" name="muscleType">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>70</y>
+      <x>370</x>
+      <y>0</y>
       <width>111</width>
       <height>17</height>
      </rect>
@@ -56,30 +56,30 @@
    <widget class="QCustomPlot" name="current" native="true">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>0</y>
-      <width>231</width>
-      <height>251</height>
+      <x>600</x>
+      <y>20</y>
+      <width>201</width>
+      <height>151</height>
      </rect>
     </property>
    </widget>
    <widget class="QCustomPlot" name="displacement" native="true">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>0</y>
-      <width>231</width>
-      <height>251</height>
+      <x>410</x>
+      <y>20</y>
+      <width>191</width>
+      <height>151</height>
      </rect>
     </property>
    </widget>
    <widget class="QCustomPlot" name="encoder0_pos" native="true">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>0</y>
-      <width>231</width>
-      <height>251</height>
+      <x>10</x>
+      <y>20</y>
+      <width>201</width>
+      <height>151</height>
      </rect>
     </property>
    </widget>
@@ -87,7 +87,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>10</y>
+      <y>0</y>
       <width>111</width>
       <height>17</height>
      </rect>
@@ -106,8 +106,8 @@
    <widget class="QLabel" name="icebus">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>30</y>
+      <x>120</x>
+      <y>0</y>
       <width>111</width>
       <height>17</height>
      </rect>
@@ -126,18 +126,18 @@
    <widget class="QCustomPlot" name="encoder1_pos" native="true">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>0</y>
-      <width>231</width>
-      <height>251</height>
+      <x>210</x>
+      <y>20</y>
+      <width>201</width>
+      <height>151</height>
      </rect>
     </property>
    </widget>
    <widget class="QLabel" name="icebusID">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>50</y>
+      <x>230</x>
+      <y>0</y>
       <width>111</width>
       <height>17</height>
      </rect>
@@ -156,10 +156,10 @@
    <widget class="QSlider" name="setpoint_slider">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>0</y>
+      <x>800</x>
+      <y>5</y>
       <width>51</width>
-      <height>251</height>
+      <height>171</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -245,8 +245,8 @@ border-radius: 4px;
    <widget class="QFrame" name="frame_2">
     <property name="geometry">
      <rect>
-      <x>1110</x>
-      <y>40</y>
+      <x>990</x>
+      <y>80</y>
       <width>127</width>
       <height>32</height>
      </rect>
@@ -326,8 +326,8 @@ border-radius: 4px;
    <widget class="QFrame" name="frame_3">
     <property name="geometry">
      <rect>
-      <x>1110</x>
-      <y>70</y>
+      <x>990</x>
+      <y>110</y>
       <width>127</width>
       <height>32</height>
      </rect>
@@ -407,8 +407,8 @@ border-radius: 4px;
    <widget class="QFrame" name="frame_4">
     <property name="geometry">
      <rect>
-      <x>1110</x>
-      <y>100</y>
+      <x>990</x>
+      <y>140</y>
       <width>127</width>
       <height>32</height>
      </rect>
@@ -488,7 +488,7 @@ border-radius: 4px;
    <widget class="QSpinBox" name="control_mode">
     <property name="geometry">
      <rect>
-      <x>1230</x>
+      <x>980</x>
       <y>0</y>
       <width>48</width>
       <height>26</height>
@@ -506,7 +506,7 @@ border-radius: 4px;
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>1110</x>
+      <x>860</x>
       <y>-3</y>
       <width>121</width>
       <height>30</height>
@@ -524,9 +524,9 @@ border-radius: 4px;
    <widget class="QLineEdit" name="control_mode_text">
     <property name="geometry">
      <rect>
-      <x>1280</x>
+      <x>1030</x>
       <y>0</y>
-      <width>101</width>
+      <width>81</width>
       <height>26</height>
      </rect>
     </property>
@@ -535,6 +535,43 @@ border-radius: 4px;
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>37</y>
+      <width>81</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>setpoint</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="setpoint_text">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>40</y>
+      <width>81</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

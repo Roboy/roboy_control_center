@@ -38,8 +38,8 @@ public:
 
     void MotorState(const MotorStateConstPtr &msg){
         motorStateTimeStamps.push_back(ros::Time::now().toSec()-startTime);
-        for(int i=0;i<msg->encoder0_pos.size();i++){
-            int motor_id_global = icebus[0/*msg->icebus*/][i]->motor_id_global;
+        for(int i=0;i<msg->global_id.size();i++){
+            int motor_id_global = msg->global_id[i]; 
             setpoint[motor_id_global].push_back(msg->setpoint[i]);
             encoder0_pos[motor_id_global].push_back(msg->encoder0_pos[i]);
             encoder1_pos[motor_id_global].push_back(msg->encoder1_pos[i]);

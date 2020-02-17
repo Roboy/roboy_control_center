@@ -138,6 +138,7 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
                              SIGNAL(sliderMoved(int)),
                              this, SLOT(sliderMoved()));
             setpoints[icebus[i][j]->motor_id_global] = 0;
+            motor_ui[icebus[i][j]->motor_id_global].setpoint_text->setText(QString::asprintf("%d",setpoints[icebus[i][j]->motor_id_global]));
             motor_ui[icebus[i][j]->motor_id_global].setpoint_slider->setObjectName(QString::number(icebus[i][j]->motor_id_global));
             motor_scrollarea->layout()->addWidget(widget2);
         }
@@ -240,6 +241,7 @@ void RoboyControlCenter::plotMotorState() {
                 motor_ui[motor_id_global].encoder1_pos->replot();
                 motor_ui[motor_id_global].displacement->replot();
                 motor_ui[motor_id_global].current->replot();
+                motor_ui[motor_id_global].setpoint_text->setText(QString::asprintf("%d",setpoint[motor_id_global].back()));
             }
         }
     }

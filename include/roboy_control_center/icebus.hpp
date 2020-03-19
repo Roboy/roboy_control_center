@@ -30,16 +30,13 @@ public:
             motorState = nh->subscribe("/roboy/middleware/MotorState", 1, &Icebus::MotorState, this);
             motorInfo = nh->subscribe("/roboy/middleware/MotorInfo", 1, &Icebus::MotorInfo, this);
         }
-        if(!myobus.empty()){
-
-        }
         motorCommand = nh->advertise<roboy_middleware_msgs::MotorCommand>("/roboy/middleware/MotorCommand",1);
     }
 
     void MotorState(const MotorStateConstPtr &msg){
         motorStateTimeStamps.push_back(ros::Time::now().toSec()-startTime);
         for(int i=0;i<msg->global_id.size();i++){
-            int motor_id_global = msg->global_id[i]; 
+            int motor_id_global = msg->global_id[i];
             setpoint[motor_id_global].push_back(msg->setpoint[i]);
             encoder0_pos[motor_id_global].push_back(msg->encoder0_pos[i]);
             encoder1_pos[motor_id_global].push_back(msg->encoder1_pos[i]);

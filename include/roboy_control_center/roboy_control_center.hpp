@@ -74,5 +74,5 @@ private:
     vector<QWidget*> widgets;
     map<int,float> setpoints;
     QMetaObject::Connection plotConnection;
-    QVector<double> *x,*y;
+    QVector<double> *x,*y,*y_target;
 };

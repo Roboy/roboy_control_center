@@ -84,10 +84,8 @@ void RoboyControlCenter::initPlugin(qt_gui_cpp::PluginContext &context) {
             motor_ui[icebus[i][j]->motor_id_global].muscleType->setText(QString::asprintf("%s",icebus[i][j]->muscleType.c_str()));
             if(icebus[i][j]->muscleType=="myoMuscle")
                 motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: green");
-            else if(icebus[i][j]->muscleType=="myoBrick100")
+            else if(icebus[i][j]->muscleType=="myoBrick")
                 motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: violet");
-            else if(icebus[i][j]->muscleType=="myoBrick300")
-                motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: yellow");
             else
                 motor_ui[icebus[i][j]->motor_id_global].muscleType->setStyleSheet("background-color: red");
             motor_ui[icebus[i][j]->motor_id_global].encoder0_pos->addGraph();
@@ -232,6 +230,10 @@ void RoboyControlCenter::plotMotorState() {
                         motor_ui[motor_id_global].encoder1_pos->graph(1)->clearData();
                         motor_ui[motor_id_global].displacement->graph(1)->setData(motorStateTimeStamps,
                                                                                   setpoint[motor_id_global]);
+                    default:
+                        motor_ui[motor_id_global].encoder0_pos->graph(1)->clearData();
+                        motor_ui[motor_id_global].encoder1_pos->graph(1)->clearData();
+                        motor_ui[motor_id_global].displacement->graph(1)->clearData();
                 }
                 motor_ui[motor_id_global].encoder0_pos->rescaleAxes();
                 motor_ui[motor_id_global].encoder1_pos->rescaleAxes();
@@ -250,6 +252,9 @@ void RoboyControlCenter::plotMotorState() {
 void RoboyControlCenter::plotData(){
     if(ui.tabs->currentIndex()==3) {
         ui.plot->graph(0)->setData(*x, *y);
+        if(y_target!=nullptr){
+          ui.plot->graph(1)->setData(*x, *y_target);
+        }
         ui.plot->rescaleAxes();
         ui.plot->replot();
     }
@@ -258,46 +263,64 @@ void RoboyControlCenter::plotData(){
 void RoboyControlCenter::focusEncoder0Plot(QCPAbstractPlottable *plottable, QMouseEvent* event){
     QObject::disconnect(plotConnection);
     int m = plottable->name().toInt();
+    ROS_INFO("focusEncoder0Plot: %d",m);
     ui.plot->clearGraphs();
     ui.plot->addGraph();
     ui.plot->graph(0)->setPen(QColor(Qt::blue));
+    ui.plot->addGraph();
+    ui.plot->graph(1)->setPen(QColor(Qt::gray));
     ui.plot->yAxis->setLabel("encoder0_pos[ticks]");
     x = &motorStateTimeStamps;
     y = &encoder0_pos[m];
+    y_target = &setpoint[m];
     plotConnection = QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotData()));
+    ui.tabs->setCurrentIndex(3);
 }
 void RoboyControlCenter::focusEncoder1Plot(QCPAbstractPlottable *plottable, QMouseEvent* event){
     QObject::disconnect(plotConnection);
     int m = plottable->name().toInt();
+    ROS_INFO("focusEncoder1Plot: %d",m);
     ui.plot->clearGraphs();
     ui.plot->addGraph();
     ui.plot->graph(0)->setPen(QColor(Qt::red));
+    ui.plot->addGraph();
+    ui.plot->graph(1)->setPen(QColor(Qt::gray));
     ui.plot->yAxis->setLabel("encoder1_pos[ticks]");
     x = &motorStateTimeStamps;
-    y = &encoder0_pos[m];
+    y = &encoder1_pos[m];
+    y_target = &setpoint[m];
     plotConnection = QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotData()));
+    ui.tabs->setCurrentIndex(3);
 }
 void RoboyControlCenter::focusDisplacementPlot(QCPAbstractPlottable *plottable, QMouseEvent* event){
     QObject::disconnect(plotConnection);
     int m = plottable->name().toInt();
+    ROS_INFO("focusDisplacementPlot: %d",m);
     ui.plot->clearGraphs();
     ui.plot->addGraph();
     ui.plot->graph(0)->setPen(QColor(Qt::green));
+    ui.plot->addGraph();
+    ui.plot->graph(1)->setPen(QColor(Qt::gray));
     ui.plot->yAxis->setLabel("displacement[ticks]");
     x = &motorStateTimeStamps;
-    y = &encoder0_pos[m];
+    y = &displacement[m];
+    y_target = &setpoint[m];
     plotConnection = QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotData()));
+    ui.tabs->setCurrentIndex(3);
 }
 void RoboyControlCenter::focusCurrentPlot(QCPAbstractPlottable *plottable, QMouseEvent* event){
     QObject::disconnect(plotConnection);
     int m = plottable->name().toInt();
+    ROS_INFO("focusCurrentPlot: %d",m);
     ui.plot->clearGraphs();
     ui.plot->addGraph();
     ui.plot->graph(0)->setPen(QColor(Qt::darkBlue));
     ui.plot->yAxis->setLabel("current[mA]");
     x = &motorStateTimeStamps;
-    y = &encoder0_pos[m];
+    y = &current[m];
+    y_target = nullptr;
     plotConnection = QObject::connect(this, SIGNAL(triggerMotorStateUpdate()), this, SLOT(plotData()));
+    ui.tabs->setCurrentIndex(3);
 }
 
 void RoboyControlCenter::resetSliders(){

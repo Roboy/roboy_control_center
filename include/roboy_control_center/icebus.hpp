@@ -61,8 +61,8 @@ public:
 
     void MotorInfo(const MotorInfoConstPtr &msg){
         motorInfoTimeStamps.push_back(ros::Time::now().toSec()-startTime);
-        for(int i=0;i<msg->communication_quality.size();i++){
-            int motor_id_global = icebus[0/*msg->icebus*/][i]->motor_id_global;
+        for(int i=0;i<msg->global_id.size();i++){
+            int motor_id_global = msg->global_id[i];
             control_mode[motor_id_global] = msg->control_mode[i];
             Kp[motor_id_global] = msg->Kp[i];
             Ki[motor_id_global] = msg->Ki[i];

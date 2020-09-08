@@ -334,7 +334,7 @@ void RoboyControlCenter::sliderMoved(){
     for(auto &m:motor_ui){
         int global_id = m.second.setpoint_slider->objectName().toInt();
         setpoints[global_id]+=(m.second.setpoint_slider->value()-50);
-        msg.motor.push_back(global_id);
+        msg.global_id.push_back(global_id);
         msg.setpoint.push_back(setpoints[global_id]);
     }
     motorCommand.publish(msg);
